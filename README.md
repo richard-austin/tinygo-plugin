@@ -1,8 +1,7 @@
 # Go Plugin
-This is a fork of https://github.com/dm0275/go-plugin modified by Richard Austin to provide 
-compatibility with gradle 10.
+This is derived from https://github.com/dm0275/go-plugin to provide a plugin for projects using TinyGo
 ## Overview
-The `Go-Plugin` is a Gradle plugin for Go projects. This plugin does not intend to replace Go's native dependency management system, 
+The `TinyGo-Plugin` is a Gradle plugin for TinyGo projects. This plugin does not intend to replace TinyGo's native dependency management system, 
 instead this plugin focuses on replacing traditional task orchestrators like Make, offering a more versatile and reusable approach for task automation.
 
 ## Usage
@@ -10,24 +9,24 @@ Add the following to apply the plugin to your project:
 
 **Groovy DSL**:
 ```groovy
-import io.github.richard_austin.tasks.GoTask
+import io.github.richard_austin.tasks.TinyGoTask
 
 plugins {
-    id "io.github.richard-austin.go-plugin" version "$version"
+    id "io.github.richard-austin.tinygo-plugin" version "$version"
 }
 ```
 
 **Kotling DSL**:
 ```kotlin
-import io.github.richard_austin.tasks.GoTask
+import io.github.richard_austin.tasks.TinyGoTask
 
 plugins {
-    id("io.github.richard-austin.go-plugin") version("$version")
+    id("io.github.richard-austin.tinygo-plugin") version("$version")
 }
 ```
 
 ## Tasks
-The go-plugin offers the following built-in tasks:
+The tinygo-plugin offers the following built-in tasks:
 ```
 Go tasks
 --------
@@ -48,7 +47,7 @@ The plugin can be easily configured using an extension with the following custom
 | `os`             | `List<String>`        | Specify the target Operating Systems for builds.          | `listOf("linux", "darwin")` |
 | `arch`           | `List<String>`        | Specify the target Architectures for builds.              | `listOf("arm64", "amd64")`  |
 | `ldFlags`        | `Map<String, String>` | Set custom ldflags for use during builds.                 | `mapOf<String, String>()`   |
-| `goVersion`      | `String`              | Go version to install                                     | `1.21.6`                    |
+| `tinyGoVersion`      | `String`              | Go version to install                                     | `1.21.6`                    |
 | `extraBuildArgs` | `List<String>`        | Extra build arguments to pass to `goBuild$Os$Arch` tasks. | `listOf<String>()`          |
 | `extraTestArgs`  | `List<String>`        | Extra test arguments to `test` task.                      | `listOf<String>()`          |
 

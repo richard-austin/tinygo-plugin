@@ -10,7 +10,7 @@ import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputFile
 
 @CacheableTask
-abstract class BuildTask : GoTask() {
+abstract class BuildTask : TinyGoTask() {
     @get:Input
     var os = ""
 

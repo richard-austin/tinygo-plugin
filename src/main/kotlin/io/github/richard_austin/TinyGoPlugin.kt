@@ -3,7 +3,7 @@ package io.github.richard_austin
 
 import io.github.richard_austin.tasks.BuildTask
 import io.github.richard_austin.tasks.DownloadGoTask
-import io.github.richard_austin.tasks.InstallGoTask
+import io.github.richard_austin.tasks.InstallTinyGoTask
 import io.github.richard_austin.tasks.TestTask
 import io.github.richard_austin.utils.PluginUtils.ext
 import org.gradle.api.Plugin
@@ -11,7 +11,7 @@ import org.gradle.api.Project
 import org.gradle.internal.extensions.stdlib.capitalized
 import kotlin.jvm.java
 
-class GoPlugin: Plugin<Project> {
+class TinyGoPlugin: Plugin<Project> {
     override fun apply(project: Project) {
         // Create plugin extension
         project.extensions.create(GO_PLUGIN_EXTENSION, PluginExtension::class.java)
@@ -36,11 +36,11 @@ class GoPlugin: Plugin<Project> {
                 downloadTask.rootDir.set(project.rootDir)
             }
             // Setup install task
-            project.tasks.register(GO_INSTALL_TASK, InstallGoTask::class.java) { installTask ->
+            project.tasks.register(GO_INSTALL_TASK, InstallTinyGoTask::class.java) { installTask ->
                 installTask.group = GO_PLUGIN_GROUP
                 installTask.description = "Install Golang"
-                installTask.goVersion.set(project.ext.goVersion)
-                installTask.defaultGoVersion.set(project.ext.defaultGoVersion)
+                installTask.tinyGoVersion.set(project.ext.goVersion)
+                installTask.defaultTinyGoVersion.set(project.ext.defaultGoVersion)
                 installTask.rootDir.set(project.rootDir)
 
                 installTask.dependsOn(downloadGoTask)

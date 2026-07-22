@@ -7,10 +7,10 @@
 
 pluginManagement {
     repositories {
-        mavenLocal()
+       // mavenLocal()
         mavenCentral()
         gradlePluginPortal()
     }
 }
 
-rootProject.name = "go-plugin"
+rootProject.name = "tinygo-plugin"

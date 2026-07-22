@@ -13,7 +13,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version ("2.4.20-Beta1")
 }
 
-version = "0.7.1"
+version = "0.0.1"
 group = "io.github.richard-austin"
 
 repositories {
@@ -45,18 +45,15 @@ tasks.jacocoTestReport {
 }
 
 gradlePlugin {
-    website = "https://github.com/richard-austin/go-plugin"
-    vcsUrl = "https://github.com/richard-austin/go-plugin.git"
+    website = "https://github.com/richard-austin/tinygo-plugin"
+    vcsUrl = "https://github.com/richard-austin/tinygo-plugin.git"
     plugins {
-        create("go-plugin") {
-            id = "io.github.richard-austin.go-plugin"
-            displayName = "Go Gradle plugin"
-            implementationClass = "io.github.richard_austin.GoPlugin"
+        create("tinygo-plugin") {
+            id = "io.github.richard-austin.tinygo-plugin"
+            displayName = "TinyGo Gradle plugin"
+            implementationClass = "io.github.richard_austin.TinyGoPlugin"
             tags = listOf("go", "golang")
-            description = "This is a fork of https://github.com/dm0275/go-plugin modified to provide compatibility with gradle 10."
-                    "The `Go-Plugin` is a Gradle plugin for Go projects. This plugin does not intend to replace" +
-                    " Go's native dependency management system, instead this plugin focuses on replacing traditional " +
-                    "task orchestrators like Make, offering a more versatile and reusable approach for task automation."
-        }
+            description = "This is derived from https://github.com/dm0275/go-plugin to make a new plugin for projects using tinygo."
+         }
     }
 }

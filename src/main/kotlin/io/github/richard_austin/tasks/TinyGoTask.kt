@@ -20,7 +20,7 @@ import java.io.File
 
 // 1. Declare the class as abstract to let Gradle safely proxy the fields
 @CacheableTask
-abstract class GoTask : AbstractExecTask<GoTask>(GoTask::class.java) {
+abstract class TinyGoTask : AbstractExecTask<TinyGoTask>(TinyGoTask::class.java) {
     @get:Input abstract val goVersion: Property<String>
     @get:Input abstract val defaultGoVersion: Property<String>
     @get:Input abstract val rootDir: Property<File>

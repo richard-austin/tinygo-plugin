@@ -7,7 +7,7 @@ import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.InputFiles
 
 @CacheableTask
-abstract class TestTask : GoTask() {
+abstract class TestTask : TinyGoTask() {
     @Classpath
     @InputFiles
     var inputFiles = project.fileTree(project.rootDir)

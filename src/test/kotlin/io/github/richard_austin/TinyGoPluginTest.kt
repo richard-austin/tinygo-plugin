@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
-class GoPluginTest {
+class TinyGoPluginTest {
 
     @TempDir
     lateinit var tempDir: File
@@ -16,7 +16,7 @@ class GoPluginTest {
     @Test
     fun testDefaultTasksExist() {
         val project: Project = ProjectBuilder.builder().withProjectDir(tempDir).build()
-        project.pluginManager.apply(GoPlugin::class.java)
+        project.pluginManager.apply(TinyGoPlugin::class.java)
 
         // Force project evaluation
         project.getTasksByName("build", false)

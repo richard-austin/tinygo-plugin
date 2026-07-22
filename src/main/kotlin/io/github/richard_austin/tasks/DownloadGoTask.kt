@@ -7,7 +7,7 @@ import io.github.richard_austin.utils.PluginUtils
 import io.github.richard_austin.utils.PluginUtils.getArch
 import io.github.richard_austin.utils.PluginUtils.getOs
 import io.github.richard_austin.utils.PluginUtils.goBinary
-import io.github.richard_austin.utils.PluginUtils.goInstalled
+import io.github.richard_austin.utils.PluginUtils.tinyGoInstalled
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.provider.Property
@@ -36,7 +36,7 @@ abstract class DownloadGoTask @Inject constructor(
     }
 
     fun installGo(): Boolean {
-        return (!goInstalled() || goVersion.get().isNotEmpty())
+        return (!tinyGoInstalled() || goVersion.get().isNotEmpty())
     }
 
     @TaskAction

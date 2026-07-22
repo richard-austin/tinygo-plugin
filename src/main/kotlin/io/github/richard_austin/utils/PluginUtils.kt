@@ -29,7 +29,7 @@ object PluginUtils {
         return process.exitValue() == 0
     }
 
-    fun goInstalled(): Boolean {
+    fun tinyGoInstalled(): Boolean {
         return binaryExists(GO_BINARY)
     }
 
@@ -66,9 +66,9 @@ object PluginUtils {
     }
 
     fun goBinary(goVersion: String, defaultGoVersion: String, rootDir: File): String {
-        return if (goInstalled() && goVersion.isEmpty()) {
+        return if (tinyGoInstalled() && goVersion.isEmpty()) {
             GO_BINARY
-        } else if (!goInstalled() && goVersion.isEmpty()) {
+        } else if (!tinyGoInstalled() && goVersion.isEmpty()) {
             "${rootDir}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$defaultGoVersion/go/bin/$GO_BINARY"
         } else {
             "${rootDir}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$goVersion/go/bin/$GO_BINARY"
