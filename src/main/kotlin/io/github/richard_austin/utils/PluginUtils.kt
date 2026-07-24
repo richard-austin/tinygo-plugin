@@ -3,6 +3,8 @@ package io.github.richard_austin.utils
 
 import io.github.richard_austin.GO_BINARY
 import io.github.richard_austin.GO_SETUP_DIR
+import io.github.richard_austin.TINYGO_BINARY
+import io.github.richard_austin.TINYGO_SETUP_DIR
 import io.github.richard_austin.GRADLE_FILES_DIR
 import io.github.richard_austin.PluginExtension
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -30,6 +32,10 @@ object PluginUtils {
     }
 
     fun tinyGoInstalled(): Boolean {
+        return binaryExists(TINYGO_BINARY)
+    }
+
+    fun goInstalled(): Boolean {
         return binaryExists(GO_BINARY)
     }
 
@@ -65,14 +71,23 @@ object PluginUtils {
         }
     }
 
-    fun goBinary(goVersion: String, defaultGoVersion: String, rootDir: File): String {
+    fun tinyGoBinary(goVersion: String, defaultGoVersion: String, rootDir: File): String {
         return if (tinyGoInstalled() && goVersion.isEmpty()) {
-            GO_BINARY
+            TINYGO_BINARY
         } else if (!tinyGoInstalled() && goVersion.isEmpty()) {
+            "${rootDir}/$GRADLE_FILES_DIR/$TINYGO_SETUP_DIR-$defaultGoVersion/tinygo/bin/$TINYGO_BINARY"
+        } else {
+            "${rootDir}/$GRADLE_FILES_DIR/$TINYGO_SETUP_DIR-$goVersion/tinygo/bin/$TINYGO_BINARY"
+        }
+    }
+
+    fun goBinary(goVersion: String, defaultGoVersion: String, rootDir: File): String {
+        return if (goInstalled() && goVersion.isEmpty()) {
+            GO_BINARY
+        } else if (!goInstalled() && goVersion.isEmpty()) {
             "${rootDir}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$defaultGoVersion/go/bin/$GO_BINARY"
         } else {
             "${rootDir}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$goVersion/go/bin/$GO_BINARY"
         }
     }
-
 }

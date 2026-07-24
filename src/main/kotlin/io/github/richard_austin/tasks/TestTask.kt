@@ -30,7 +30,7 @@ abstract class TestTask : TinyGoTask() {
 
         // Configure Project DIR
         testArgs.add("${project.rootDir}/...")
-        goTaskArgs = testArgs
+        tinyGoTaskArgs = testArgs
 
         super.exec()
     }

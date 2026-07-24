@@ -30,17 +30,21 @@ class TinyGoPlugin: Plugin<Project> {
 
             val downloadGoTask = project.tasks.register(GO_DOWNLOAD_TASK, DownloadGoTask::class.java) { downloadTask ->
                 downloadTask.group = GO_PLUGIN_GROUP
-                downloadTask.description = "Download Golang"
-                downloadTask.goVersion.set(project.ext.goVersion)
+                downloadTask.description = "Download TinyGo and Golang"
+                downloadTask.tinyGoVersion.set(project.ext.tinyGoVersion)
+                downloadTask.defaultTinyGoVersion.set(project.ext.defaultTinyGoVersion)
+                downloadTask.goVersion.set(project.ext.golangVersion)
                 downloadTask.defaultGoVersion.set(project.ext.defaultGoVersion)
                 downloadTask.rootDir.set(project.rootDir)
             }
             // Setup install task
             project.tasks.register(GO_INSTALL_TASK, InstallTinyGoTask::class.java) { installTask ->
                 installTask.group = GO_PLUGIN_GROUP
-                installTask.description = "Install Golang"
-                installTask.tinyGoVersion.set(project.ext.goVersion)
-                installTask.defaultTinyGoVersion.set(project.ext.defaultGoVersion)
+                installTask.description = "Install TinyGo and Golang"
+                installTask.tinyGoVersion.set(project.ext.tinyGoVersion)
+                installTask.defaultTinyGoVersion.set(project.ext.defaultTinyGoVersion)
+                installTask.goVersion.set(project.ext.golangVersion)
+                installTask.defaultGoVersion.set(project.ext.defaultGoVersion)
                 installTask.rootDir.set(project.rootDir)
 
                 installTask.dependsOn(downloadGoTask)

@@ -2,10 +2,13 @@
 package io.github.richard_austin.tasks
 
 import io.github.richard_austin.GO_SETUP_DIR
+import io.github.richard_austin.TINYGO_SETUP_DIR
 import io.github.richard_austin.GRADLE_FILES_DIR
 import io.github.richard_austin.utils.PluginUtils.getArch
 import io.github.richard_austin.utils.PluginUtils.getOs
 import io.github.richard_austin.utils.PluginUtils.goBinary
+import io.github.richard_austin.utils.PluginUtils.tinyGoBinary
+import io.github.richard_austin.utils.PluginUtils.goInstalled
 import io.github.richard_austin.utils.PluginUtils.tinyGoInstalled
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ArchiveOperations // Required for tarTree
@@ -28,36 +31,67 @@ abstract class InstallTinyGoTask @Inject constructor(
 
     @get:Input
     abstract val tinyGoVersion: Property<String>
-
     @get:Input
     abstract val defaultTinyGoVersion: Property<String>
+    @get:Input
+    abstract val goVersion: Property<String>
+
+    @get:Input
+    abstract val defaultGoVersion: Property<String>
 
     @get:Input
     abstract val rootDir: Property<File>
 
     init {
-        group = "go"
-        description = "Installs Go"
+        group = "tinygo"
+        description = "Installs TinyGo"
         onlyIf {
-            installTinyGo()
+            installTinyGo() || installGolang()
         }
     }
     fun installTinyGo(): Boolean {
         return (!tinyGoInstalled() || tinyGoVersion.get().isNotEmpty())
     }
 
+    fun installGolang(): Boolean {
+        return (!goInstalled() || goVersion.get().isNotEmpty())
+    }
 
     @TaskAction
     fun installTinyGoBinaries() {
-        val golangVersion = tinyGoVersion.get().ifEmpty {
+        val tinyGoVersion = this@InstallTinyGoTask.tinyGoVersion.get().ifEmpty {
             defaultTinyGoVersion.get()
         }
 
-        if (!File(goBinary(golangVersion, defaultTinyGoVersion.get(), rootDir.get())).exists()) {
+        val golangVersion = goVersion.get().ifEmpty {
+            defaultGoVersion.get()
+        }
+
+        if (!File(tinyGoBinary(tinyGoVersion, defaultTinyGoVersion.get(), rootDir.get())).exists()) {
+            val buildDir = projectLayout.buildDirectory.get().asFile
+            val tarfileLocation = File(buildDir, "go${tinyGoVersion}.${getOs()}-${getArch()}.tar.gz")
+            val tinyGoOutputDir = File(rootDir.get(), "$GRADLE_FILES_DIR/$TINYGO_SETUP_DIR-$tinyGoVersion")
+
+            logger.lifecycle("Extracting  ${tarfileLocation.absolutePath} ::::: into ${tinyGoOutputDir.absolutePath}")
+
+            // Perform the extraction during execution phase
+            fileSystemOperations.copy { spec ->
+                // Use archiveOperations to create the tarTree
+                spec.from(archiveOperations.tarTree(tarfileLocation))
+                spec.into(tinyGoOutputDir)
+            }
+
+            // Delete the tarfile safely after successful extraction
+            if (tarfileLocation.exists()) {
+                tarfileLocation.delete()
+            }
+        }
+
+
+        if (!File(goBinary(golangVersion, defaultGoVersion.get(), rootDir.get())).exists()) {
             val buildDir = projectLayout.buildDirectory.get().asFile
             val tarfileLocation = File(buildDir, "go${golangVersion}.${getOs()}-${getArch()}.tar.gz")
             val outputDir = File(rootDir.get(), "$GRADLE_FILES_DIR/$GO_SETUP_DIR-$golangVersion")
-
             logger.lifecycle("Extracting  ${tarfileLocation.absolutePath} ::::: into ${outputDir.absolutePath}")
 
             // Perform the extraction during execution phase
@@ -72,5 +106,6 @@ abstract class InstallTinyGoTask @Inject constructor(
                 tarfileLocation.delete()
             }
         }
+
     }
 }

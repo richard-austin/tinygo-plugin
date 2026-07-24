@@ -1,12 +1,12 @@
 // Modified by Richard Austin in 2026
 package io.github.richard_austin.tasks
 
-import io.github.richard_austin.GO_BINARY
+import io.github.richard_austin.TINYGO_BINARY
 import io.github.richard_austin.GO_INSTALL_TASK
 import io.github.richard_austin.GO_SETUP_DIR
 import io.github.richard_austin.GRADLE_FILES_DIR
 import io.github.richard_austin.utils.PluginUtils.ext
-import io.github.richard_austin.utils.PluginUtils.goBinary
+import io.github.richard_austin.utils.PluginUtils.tinyGoBinary
 import javax.inject.Inject
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
@@ -17,11 +17,14 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.internal.ExecActionFactory
 import java.io.File
+import kotlin.collections.set
 
 // 1. Declare the class as abstract to let Gradle safely proxy the fields
 @CacheableTask
 abstract class TinyGoTask : AbstractExecTask<TinyGoTask>(TinyGoTask::class.java) {
+    @get:Input abstract val tinyGoVersion: Property<String>
     @get:Input abstract val goVersion: Property<String>
+    @get:Input abstract val defaultTinyGoVersion: Property<String>
     @get:Input abstract val defaultGoVersion: Property<String>
     @get:Input abstract val rootDir: Property<File>
 
@@ -33,13 +36,15 @@ abstract class TinyGoTask : AbstractExecTask<TinyGoTask>(TinyGoTask::class.java)
     abstract override fun getExecActionFactory(): ExecActionFactory
 
     @Input
-    var goTaskArgs: MutableList<String> = mutableListOf()
+    var tinyGoTaskArgs: MutableList<String> = mutableListOf()
 
     @Internal
-    var goTaskEnv: MutableMap<String, Any> = mutableMapOf()
+    var tinyGoTaskEnv: MutableMap<String, Any> = mutableMapOf()
 
     init {
-        goVersion.set(project.ext.goVersion)
+        tinyGoVersion.set(project.ext.tinyGoVersion)
+        goVersion.set(project.ext.golangVersion)
+        defaultTinyGoVersion.set(project.ext.defaultTinyGoVersion)
         defaultGoVersion.set(project.ext.defaultGoVersion)
         rootDir.set(project.rootDir)
         dependsOn(GO_INSTALL_TASK)
@@ -48,24 +53,30 @@ abstract class TinyGoTask : AbstractExecTask<TinyGoTask>(TinyGoTask::class.java)
     @TaskAction
     override fun exec()
     {
-        val golangVersion = goVersion.get().ifEmpty {
+        val tinyGolangVersion = tinyGoVersion.get().ifEmpty {
+            defaultTinyGoVersion.get()
+        }
+        val goVersion = goVersion.get().ifEmpty {
             defaultGoVersion.get()
         }
-        val goBinary = goBinary(goVersion.get(), defaultGoVersion.get(), rootDir.get())
-        logger.info("goBinary: $goBinary")
-        logger.info("goVersion: $golangVersion")
+
+        val tinyGoBinary = tinyGoBinary(tinyGoVersion.get(), defaultTinyGoVersion.get(), rootDir.get())
+        logger.info("tinyGoBinary: $tinyGoBinary")
+        logger.info("tinyGoVersion: $tinyGolangVersion")
         // Configure GOROOT (if needed)
-        if (goBinary != GO_BINARY) {
-            goTaskEnv["GOROOT"] = "${rootDir.get()}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$golangVersion/go"
+        if (tinyGoBinary != TINYGO_BINARY) {
+            tinyGoTaskEnv["GOROOT"] = "${rootDir.get()}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$goVersion/go"
         }
-        executable = goBinary
-        args = goTaskArgs
-        goTaskEnv.forEach { (key, value) ->
+        executable = tinyGoBinary
+        args = tinyGoTaskArgs
+        tinyGoTaskEnv.forEach { (key, value) ->
             environment(key, value)
         }
 
-        logger.info("goTaskEnv: $goTaskEnv")
-        logger.info("goTaskArgs: $goTaskArgs")
+        logger.info("tinyGoTaskEnv: $tinyGoTaskEnv")
+        logger.info("tinyGoTaskArgs: $tinyGoTaskArgs")
+
+        super.environment["PATH"] = (super.environment["PATH"] as String) +":${rootDir.get()}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$goVersion/go/bin"
 
         super.exec()
     }

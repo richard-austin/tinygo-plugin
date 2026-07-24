@@ -6,8 +6,10 @@ open class PluginExtension {
     var cgoEnabled:Boolean = false
     var os:List<String> = listOf("linux", "darwin")
     var arch:List<String> = listOf("arm64", "amd64")
-    var goVersion:String = ""
-    var defaultGoVersion:String = "1.21.6"
+    var golangVersion:String = ""
+    var defaultGoVersion:String = "1.26.5"
+    var tinyGoVersion:String = ""
+    var defaultTinyGoVersion:String = "0.41.1"
     var ldFlags:Map<String, String> = mapOf()
     var extraBuildArgs:List<String> = listOf()
     var extraTestArgs:List<String> = listOf()

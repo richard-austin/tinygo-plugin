@@ -39,9 +39,9 @@ abstract class BuildTask : TinyGoTask() {
 
     override fun exec() {
         // Setup task environment
-        goTaskEnv["GOOS"] = os
-        goTaskEnv["GOARCH"] = arch
-        goTaskEnv["CGO_ENABLED"] = project.ext.cgoEnabled.toInt()
+        tinyGoTaskEnv["GOOS"] = os
+        tinyGoTaskEnv["GOARCH"] = arch
+        tinyGoTaskEnv["CGO_ENABLED"] = project.ext.cgoEnabled.toInt()
 
         // Setup build dir
         val buildDir = project.layout.buildDirectory.get().asFile
@@ -70,7 +70,7 @@ abstract class BuildTask : TinyGoTask() {
 
         // Configure Project DIR
         buildArgs.add("${project.rootDir}")
-        goTaskArgs = buildArgs
+        tinyGoTaskArgs = buildArgs
 
         super.exec()
     }
