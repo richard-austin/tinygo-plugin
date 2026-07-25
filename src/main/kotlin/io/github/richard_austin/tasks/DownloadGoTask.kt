@@ -8,9 +8,7 @@ import io.github.richard_austin.utils.PluginUtils
 import io.github.richard_austin.utils.PluginUtils.getArch
 import io.github.richard_austin.utils.PluginUtils.getOs
 import io.github.richard_austin.utils.PluginUtils.goBinary
-import io.github.richard_austin.utils.PluginUtils.goInstalled
 import io.github.richard_austin.utils.PluginUtils.tinyGoBinary
-import io.github.richard_austin.utils.PluginUtils.tinyGoInstalled
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ProjectLayout
 import org.gradle.api.provider.Property
@@ -37,13 +35,6 @@ abstract class DownloadGoTask @Inject constructor(
     abstract val rootDir: Property<File>
 
     init {
-        onlyIf {
-            installGo()
-        }
-    }
-
-    fun installGo(): Boolean {
-        return (!tinyGoInstalled() || tinyGoVersion.get().isNotEmpty() || goInstalled() || goVersion.get().isNotEmpty())
     }
 
     @TaskAction

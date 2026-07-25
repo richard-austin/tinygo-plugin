@@ -77,7 +77,6 @@ abstract class TinyGoTask : AbstractExecTask<TinyGoTask>(TinyGoTask::class.java)
         logger.info("tinyGoTaskArgs: $tinyGoTaskArgs")
 
         super.environment["PATH"] = (super.environment["PATH"] as String) +":${rootDir.get()}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$goVersion/go/bin"
-
         super.exec()
     }
 }

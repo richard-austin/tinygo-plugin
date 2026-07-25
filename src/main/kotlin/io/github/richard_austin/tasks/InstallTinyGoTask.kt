@@ -8,8 +8,6 @@ import io.github.richard_austin.utils.PluginUtils.getArch
 import io.github.richard_austin.utils.PluginUtils.getOs
 import io.github.richard_austin.utils.PluginUtils.goBinary
 import io.github.richard_austin.utils.PluginUtils.tinyGoBinary
-import io.github.richard_austin.utils.PluginUtils.goInstalled
-import io.github.richard_austin.utils.PluginUtils.tinyGoInstalled
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ArchiveOperations // Required for tarTree
 import org.gradle.api.file.FileSystemOperations // Required for copy
@@ -45,16 +43,6 @@ abstract class InstallTinyGoTask @Inject constructor(
     init {
         group = "tinygo"
         description = "Installs TinyGo"
-        onlyIf {
-            installTinyGo() || installGolang()
-        }
-    }
-    fun installTinyGo(): Boolean {
-        return (!tinyGoInstalled() || tinyGoVersion.get().isNotEmpty())
-    }
-
-    fun installGolang(): Boolean {
-        return (!goInstalled() || goVersion.get().isNotEmpty())
     }
 
     @TaskAction

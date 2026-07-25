@@ -21,24 +21,24 @@ object PluginUtils {
         return if (this) 1 else 0
     }
 
-    fun binaryExists(binary: String): Boolean {
-        val command = ArrayList<String>()
-        command.add("which")
-        command.add(binary)
-        val proc = ProcessBuilder(command)
-        val process = proc.start()
-        process.waitFor()
-        return process.exitValue() == 0
-    }
-
-    fun tinyGoInstalled(): Boolean {
-        return binaryExists(TINYGO_BINARY)
-    }
-
-    fun goInstalled(): Boolean {
-        return binaryExists(GO_BINARY)
-    }
-
+//    fun binaryExists(binary: String): Boolean {
+//        val command = ArrayList<String>()
+//        command.add("which")
+//        command.add(binary)
+//        val proc = ProcessBuilder(command)
+//        val process = proc.start()
+//        process.waitFor()
+//        return process.exitValue() == 0
+//    }
+//
+//    fun tinyGoInstalled(): Boolean {
+//        return binaryExists(TINYGO_BINARY)
+//    }
+//
+//    fun goInstalled(): Boolean {
+//        return binaryExists(GO_BINARY)
+//    }
+//
     fun getOs(): String {
         return when {
             Os.isFamily(Os.FAMILY_MAC) -> "darwin"
@@ -71,20 +71,16 @@ object PluginUtils {
         }
     }
 
-    fun tinyGoBinary(goVersion: String, defaultGoVersion: String, rootDir: File): String {
-        return if (tinyGoInstalled() && goVersion.isEmpty()) {
-            TINYGO_BINARY
-        } else if (!tinyGoInstalled() && goVersion.isEmpty()) {
+    fun tinyGoBinary(tinyGoVersion: String, defaultGoVersion: String, rootDir: File): String {
+       return if (tinyGoVersion.isEmpty()) {
             "${rootDir}/$GRADLE_FILES_DIR/$TINYGO_SETUP_DIR-$defaultGoVersion/tinygo/bin/$TINYGO_BINARY"
         } else {
-            "${rootDir}/$GRADLE_FILES_DIR/$TINYGO_SETUP_DIR-$goVersion/tinygo/bin/$TINYGO_BINARY"
+            "${rootDir}/$GRADLE_FILES_DIR/$TINYGO_SETUP_DIR-$tinyGoVersion/tinygo/bin/$TINYGO_BINARY"
         }
     }
 
     fun goBinary(goVersion: String, defaultGoVersion: String, rootDir: File): String {
-        return if (goInstalled() && goVersion.isEmpty()) {
-            GO_BINARY
-        } else if (!goInstalled() && goVersion.isEmpty()) {
+        return  if (goVersion.isEmpty()) {
             "${rootDir}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$defaultGoVersion/go/bin/$GO_BINARY"
         } else {
             "${rootDir}/$GRADLE_FILES_DIR/$GO_SETUP_DIR-$goVersion/go/bin/$GO_BINARY"
